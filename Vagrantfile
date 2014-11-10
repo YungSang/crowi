@@ -15,6 +15,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.network :forwarded_port, guest: 27017, host: 27017
   config.vm.network :forwarded_port, guest: 3000, host: 3000
 
+  config.vm.provision :shell do |sh|
+    sh.inline = <<-EOT
+      docker rm -f crowi || true
+      docker rm -f mongodb || true
+    EOT
+  end
+
   config.vm.provision :docker do |d|
     d.build_image "/vagrant/", args: "--rm -t yungsang/crowi"
     d.run "mongodb",
